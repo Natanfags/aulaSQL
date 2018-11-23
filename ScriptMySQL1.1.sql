@@ -137,10 +137,10 @@ values ('MG'),
 ('PI'),
 ('SE'),
 ('AP'),
-('AC')
+('AC');
 
 
-select * from uf
+select * from uf;
 
 /*2 - insira as seguintes cidades:
 Para o SC
@@ -151,7 +151,7 @@ Para o SC
 insert into cidade(nome, uf_id)
 values ('Chapecó',5),
 ('Blumenau',5),
-('Joinville',5)
+('Joinville',5);
 
 /*Para o PR
 * Curitiba
@@ -173,17 +173,17 @@ values ('Curitiba',4),
 ('São Miguel do Iguaçu',4),
 ('Arapongas',4),
 ('Ponta Grossa',4),
-('Jandaia do Sul',4)
+('Jandaia do Sul',4);
 
 /*Para o SP
 *Ribeirão Preto*/
 
 insert into cidade(nome, uf_id)
-values ('Ribeirão Preto',2)
+values ('Ribeirão Preto',2);
 
 /*3 - Realize a remoção dos estados que não tem cidades*/
 
-select * from cidade
+select * from cidade;
 
 delete from uf where id in (
 select * from (select uf.id from uf left join cidade on cidade.uf_id = uf.id where cidade.uf_id is null) as u
@@ -195,36 +195,75 @@ insert into cidade(nome, uf_id)
 values ('Franca',2),
 ('Campinas',2),
 ('Bauru',2),
-('São Carlos',2)
+('São Carlos',2);
 
 /* 5 - Realize a atualização do nome das cidades:
 * Lunardeli para Lunardelli
 * Jandaia do Sul para Jandaia
 * Maringá para Cidade Canção */
 
-select * from cidade
+select * from cidade;
 
-update cidade set nome = 'Lunardelli' where nome = 'Lunardeli'
+update cidade set nome = 'Lunardelli' where nome = 'Lunardeli';
 
-update cidade set nome = 'Jandaia' where nome = 'Jandaia do Sul'
+update cidade set nome = 'Jandaia' where nome = 'Jandaia do Sul';
 
-update cidade set nome = 'Cidade Canção' where nome = 'Maringá'
+update cidade set nome = 'Cidade Canção' where nome = 'Maringá';
 
 /*6 - Faça um select que retorne o nome das cidades e seus respectivos estados. Ordene por estados e posteriomente pelo nome das cidades */
 
 /*comando para selecionar a cidade.nome a uf.nome de cidade juntos com uf.id ordenando pelo nome*/
 select cidade.nome, uf.nome from cidade 
 inner join uf on uf.id = cidade.uf_id
-order by uf.nome
+order by uf.nome;
 
 /* 7 - Retorne quantas cidades cada estado possui :) (não expliquei ainda)
 dica: veja group by e count()*/
 
-SELECT uf.nome from uf 
-count(*) as quantidade
-inner join cidade
-group by nome
+select count(uf.id), uf.nome
+from uf
+inner join cidade on uf.id = cidade.uf_id
+group by uf.nome
+order by count(uf.nome) DESC;
 
+/* 8 - Insira tres pessoas na base de dados. Cada uma destas pessoas deve ter dois enderecos (um comercial e outro residencial). As cidades que devem ser usadas são do estado do PR (você escolhe).*/
 
+insert into pessoa(id, nome, documento)
+values (1, 'João',123456789),
+(2, 'Antonio',123456789),
+(3, 'Pedro',123456789);
+ 
+/*select * from pessoa*/
 
+/*endereços do Joao*/
+insert into endereco(id, tipoLogradouro, logradouro, numero, complemento, cep, tipo, cidade_id, pessoa_id)
+values(1, 'rua', 'Neo Alves', '182', 'casa', '87035555', 1, 4, 1),
+(2, 'rua', 'Olavo Bilac', '685', 'apt01', '87035588', 2, 5, 1);
 
+/*endereço do Antonio*/
+insert into endereco(id, tipoLogradouro, logradouro, numero, complemento, cep, tipo, cidade_id, pessoa_id)
+values(3, 'av', 'Leonardo DaVinci', '541', 'casa', '87680555', 1, 8, 2),
+(4, 'praca', 'Capitao Nascimento', '123', 'bl5 apt5', '87047588', 2, 9, 2);
+
+/*endereço do Pedro*/
+insert into endereco(id, tipoLogradouro, logradouro, numero, complemento, cep, tipo, cidade_id, pessoa_id)
+values(5, 'travessa', 'Mario Kart', '1011', 'casa', '87410555', 1, 11, 3),
+(6, 'av', 'Joao de Barro', '4141', 'casa', '88547588', 2, 12, 3);
+
+/*9 -Insira duas pessoas na base de dados. Cada uma destas pessoas deve ter dois enderecos (um comercial e outro residencial). As cidades que devem ser usadas são do estado de SP (você escolhe).*/
+
+insert into pessoa(id, nome, documento)
+values (4, 'Marcio',123456789),
+(5, 'Ana',123456789);
+
+/*endereço do Marcio*/
+insert into endereco(id, tipoLogradouro, logradouro, numero, complemento, cep, tipo, cidade_id, pessoa_id)
+values(7, 'rua', 'Jaime Monjardim', '556', 'casa', '87034105', 1, 16, 4),
+(8, 'rua', 'Olavo Bilac', '685', 'apt01', '87035588', 2, 17, 4);
+
+/*endereço da Ana*/
+insert into endereco(id, tipoLogradouro, logradouro, numero, complemento, cep, tipo, cidade_id, pessoa_id)
+values(9, 'av', 'Brasil', '652', 'sl', '87039635', 1, 15, 5),
+(10, 'rua', 'Benedita da Silva', '412', 'casa', '87631588', 2, 14, 5);
+
+select * from pessoa
