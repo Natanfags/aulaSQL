@@ -278,7 +278,65 @@ values(11, 'praça', 'Petrobras', '123', 'casa', '87085205', 2, 1, 6),
 
 /*11 - Faça um select que retorne o nome das pessoas e seus respectivos enderecos (com cidade e estado). Ordene por nome de pessoa, nome do estado e nome da cidade */
 
-select * from endereco
-inner join pessoa on endereco.id = endereco.id
-group by pessoa.nome
-order by count(pessoa.nome) desc;
+SELECT P.NOME, e.logradouro, e.cep, c.nome as cidade, 
+u.nome as  estado
+FROM PESSOA P
+inner join endereco e on e.pessoa_id = p.id
+inner join cidade c on c.id = e.cidade_id
+inner join uf u on u.id = c.uf_id
+order by p.nome, c.nome, u.nome
+
+/*12 - remova todos as pessoas que tem endereço da cidade de Ribeirão Preto*/
+
+Impossivel de resolver 
+
+/*13 - Mude todos os endereços residenciais do sistema. Eles devem ter cep 00000000*/
+
+/*14 - altere o nome da coluna prestador_fk para cliente_fk. */
+
+/*15 - Insira dois recibos sendo que eles devem ter clientes residentes no PR e o prestador de servico deve ser o mesmo (não importando o estado). Exemplo: 
+* cliente fusca, da cidade curitiba, no PR. Prestador: DB1, estado PR.
+* cliente tamara, da cidade maringá, no PR. Prestador: DB1, estado PR.*/
+
+/*16 - Insira dois recibos sendo que eles devem ter clientes residentes no PR e prestadores de serviços diferentes. Exemplo: 
+* cliente fusca, da cidade curitiba, no PR. Prestador: FCV, estado PR.
+* cliente tamara, da cidade maringá, no PR. Prestador: USP, estado SP.*/
+
+/*17 - Realize uma consulta na base de dados e exiba os seguintes dados:		
+* numero do recibo
+* data emissao do recibo
+* valor do recibo
+* nome do cliente 
+* estado do cliente
+* nome do emitente
+* estado do emitente
+
+ordene por data de recibo, nome do cliente e nome do emitente*/
+
+select r.id as numeroRecibo, 	r.dataEmissao,    r.valor,
+	cliente.nome as nomeCliente, ucliente.nome as  ufCliente,
+    emitente.nome as nomeEmitente, emit_uf.nome as ufEmitente
+  from recibo r
+inner join pessoa cliente on cliente.id = r.cliente_fk
+inner join endereco ecliente on ecliente.pessoa_id = cliente.id
+inner join cidade ccliente on ccliente.id = ecliente.cidade_id
+inner join uf ucliente on ucliente.id = ccliente.uf_id
+inner join pessoa emitente on emitente.id = r.emitente_fk
+inner join endereco emit_end on emit_end.pessoa_id = emitente.id
+inner join cidade emit_cidade on emit_cidade.id = emit_end.cidade_id
+inner join uf emit_uf on emit_uf.id = emit_cidade.uf_id
+order by r.dataEmissao, cliente.nome, emitente.nome
+
+/*18 - Faça uma consulta que mostre:
+* quantidade de recibos emitidos no PR
+* valor total de recibos emitidos no PR*/
+
+select u.nome as UF, count(r.id) as quantidadeRecibo, 
+sum(r.valor) as valorTotal
+from recibo r
+inner join pessoa p on p.id = r.emitente_fk
+inner join endereco e on e.pessoa_id = p.id
+inner join cidade c on c.id = e.cidade_id
+inner join uf u on u.id = c.uf_id
+where u.nome = 'PR'
+group by u.nome
